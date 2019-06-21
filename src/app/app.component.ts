@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Observable, Observer } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -6,6 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  appStatus = new Observable((observer: Observer<string>) => {
+    setTimeout(() => {
+      observer.next('stable');
+    }, 2000);
+  });
   servers = [
     {
       instanceType: 'medium',
@@ -32,6 +38,8 @@ export class AppComponent {
       started: new Date(15, 1, 2017)
     }
   ];
+
+  filteredStatus = '';
   getStatusClasses(server: {instanceType: string, name: string, status: string, started: Date}) {
     return {
       'list-group-item-success': server.status === 'stable',
@@ -39,4 +47,14 @@ export class AppComponent {
       'list-group-item-danger': server.status === 'critical'
     };
   }
+
+  onAddServer() {
+    this.servers.push({
+      instanceType: 'small',
+      name: 'Next Server',
+      status: 'stable',
+      started: new Date()
+    });
+  }
+
 }
